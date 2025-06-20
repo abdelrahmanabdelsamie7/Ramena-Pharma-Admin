@@ -1,0 +1,44 @@
+.product-faqs h4 {
+  background-color: var(--heading-color);
+  color: #fff;
+  display: inline-block;
+  font-size: 15px;
+  padding: 10px;
+  border-radius: 25px;
+}
+.product-faqs .faq-item {
+  margin: 10px 0;
+  padding: 10px 0;
+  border-bottom: 1px solid color-mix(in srgb, #000, transparent 85%);
+}
+.product-faqs .faq-item i {
+  font-size: 16px;
+  margin: 0px 10px;
+}
+.product-faqs .faq-item h5 {
+  font-size: 18px;
+  line-height: 26px;
+  font-weight: 700;
+}
+.product-faqs .faq-item p {
+  color: var(--accent-color);
+  font-size: 15px;
+}
+.product-faqs .faq-item:first-child {
+  padding-top: 0;
+  margin-top: 0;
+}
+.product-faqs .faq-item:last-child {
+  border: 0;
+  padding-bottom: 0;
+  margin-bottom: 0;
+}
+.open-modal{
+  cursor: pointer;
+  background-color: var(--heading-color);
+  color: #fff;
+  display: inline-block;
+  font-size: 15px;
+  padding: 10px;
+  border-radius: 25px;
+}

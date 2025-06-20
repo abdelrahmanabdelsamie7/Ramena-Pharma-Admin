@@ -1,0 +1,85 @@
+<section id="section" class="section product-faqs">
+  <div class="container">
+    <div class="d-flex justify-content-between ">
+      <h4>List Of {{ product().title }} Faqs </h4>
+      <h5 class="open-modal" data-bs-toggle="modal" data-bs-target="#productFaqModal" (click)="openAddModal()">Add
+        Product Faq</h5>
+    </div>
+    @if (!isFetching()) {
+    <div class="row justify-content-center">
+      <div class="col-12 text-center">
+        @if (isLoading()) {
+        <app-loader />
+        }
+      </div>
+    </div>
+    }@else {
+    @for (item of product_faqs(); track $index) {
+    <div class="row faq-item">
+      <div class="col-md-5 d-flex">
+        <h5>{{ item.question }} <i class="bi bi-question-circle"></i></h5>
+      </div>
+      <div class="col-md-5">
+        <p>{{ item.answer }}</p>
+      </div>
+      <div class="col-md-2">
+        <div class="d-flex">
+          <a title="Edit" (click)="openUpdateModal(item)" data-bs-toggle="modal" data-bs-target="#productFaqModal">
+            <i class="bi bi-pen text-warning"></i>
+          </a>
+          <a (click)="deleteProductFaq(item.id)" title="Delete">
+            <i class="bi bi-trash text-danger"></i>
+          </a>
+        </div>
+      </div>
+    </div>
+    }@empty {
+    <app-empty />
+    }
+    }
+  </div>
+</section>
+@if (msg()) {
+<div class="toast">
+  <p>{{ msg() }}</p>
+</div> }
+<!-- Modal Of Add & Update Product -->
+<div class="modal fade" id="productFaqModal" tabindex="-1" aria-labelledby="productFaqModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5>{{ modalTitle() }}</h5>
+      </div>
+      <div class="modal-body">
+        <form [formGroup]="addProductFaqForm">
+          <div class="row">
+            <div class="col-6">
+              <div class="form-group">
+                <label for="question">Question:</label>
+                <input name="question" id="question" type="text"
+                  [ngClass]="{'is-invalid': addProductFaqForm.controls.question.touched && addProductFaqForm.controls.question.invalid}"
+                  formControlName="question" class="form-control my-2">
+              </div>
+            </div>
+            <div class="col-6">
+              <div class="form-group">
+                <label for="answer">Answer:</label>
+                <textarea name="answer" id="answer" type="text"
+                  [ngClass]="{'is-invalid': addProductFaqForm.controls.answer.touched && addProductFaqForm.controls.answer.invalid}"
+                  formControlName="answer" class="form-control my-2"></textarea>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn close" data-bs-dismiss="modal" id="closeModalButton">Close</button>
+        <button type="button" class="btn save" [disabled]="addProductFaqForm.invalid" (click)="saveProductFaq()">
+          <span *ngIf="isLoading()" class="spinner-border spinner-border-sm me-2" role="status"
+            aria-hidden="true"></span>
+          {{ modalButton() }}
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

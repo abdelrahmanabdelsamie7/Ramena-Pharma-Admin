@@ -1,0 +1,197 @@
+<section id="section">
+  <div class="container">
+    <div id="map" style="height: 500px;"></div>
+  </div>
+  <button class="btn" id="add" data-bs-toggle="modal" data-bs-target="#pharmacyModal" (click)="openAddModal()">Add
+    Pharmacy</button>
+  <!-- <div class="container col-md-8">
+    <div class="d-flex justify-content-between my-2">
+      <h2>List Pharmacies</h2>
+<button class="btn" id="add" data-bs-toggle="modal" data-bs-target="#pharmacyModal" (click)="openAddModal()">Add
+  Pharmacy</button>
+    </div>
+    @if (isFetching()) {
+    <div class="row justify-content-center">
+      <div class="col-12 text-center">
+        @if (isLoading()) {
+        <app-loader />
+        }
+      </div>
+    </div>
+    } @else {
+    <table class="table-hover table-success table-striped table">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Title</th>
+          <th colspan="3">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (item of pharmacies(); track $index) {
+        <tr>
+          <td>{{ $index + 1 }}</td>
+          <td>{{ item.title }}</td>
+          <td><a title="Show" (click)="openViewModal(item.id)" data-bs-toggle="modal"
+              data-bs-target="#viewpharmacyDetailsModal"><i class="bi bi-eye text-info"></i></a></td>
+          <td><a title="Edit" (click)="openUpdateModal(item)" data-bs-toggle="modal" data-bs-target="#pharmacyModal"><i
+                class="bi bi-pen text-warning"></i></a></td>
+          <td><a (click)="deletePharmacy(item.id)" title="Delete"><i class="bi bi-trash text-danger"></i></a></td>
+        </tr>
+        }@empty {
+        <tr>
+          <td colspan="4">
+            <app-empty />
+          </td>
+        </tr>
+        }
+      </tbody>
+    </table>
+    }
+  </div> -->
+</section>
+
+
+@if (msg()) {
+<div class="toast">
+  <p>{{ msg() }}</p>
+</div> }
+
+<!-- Modal Of Add & Update pharmacies -->
+<div class="modal fade" id="pharmacyModal" tabindex="-1" aria-labelledby="pharmacyModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5>{{ modalTitle() }}</h5>
+      </div>
+      <div class="modal-body">
+        <form [formGroup]="addPharmacyForm">
+          <div class="row">
+            <div class="col-6">
+              <div class="form-group">
+                <label for="title">Title Of Pharmacy :</label>
+                <input name="title" id="title" type="text"
+                  [ngClass]="{'is-invalid': addPharmacyForm.controls.title.touched && addPharmacyForm.controls.title.invalid}"
+                  formControlName="title" class="form-control my-2">
+              </div>
+            </div>
+            <div class="col-6">
+              <div class="form-group">
+                <label for="phone_number">phone number :</label>
+                <input name="phone_number" id="phone_number" type="text"
+                  [ngClass]="{'is-invalid': addPharmacyForm.controls.phone_number.touched && addPharmacyForm.controls.phone_number.invalid}"
+                  formControlName="phone_number" class="form-control my-2">
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-6">
+              <div class="form-group">
+                <label for="location_name">Location:</label>
+                <input name="location_name" id="location_name" type="text"
+                  [ngClass]="{'is-invalid': addPharmacyForm.controls.location_name.touched && addPharmacyForm.controls.location_name.invalid}"
+                  formControlName="location_name" class="form-control my-2">
+              </div>
+            </div>
+            <div class="col-6">
+              <div class="form-group">
+                <label for="address">Address:</label>
+                <input name="address" id="address" type="text"
+                  [ngClass]="{'is-invalid': addPharmacyForm.controls.address.touched && addPharmacyForm.controls.address.invalid}"
+                  formControlName="address" class="form-control my-2">
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-6">
+              <div class="form-group mb-3">
+                <label for="latitude">latitude :</label>
+                <input type="number" name="latitude" id="latitude"
+                  [ngClass]="{'is-invalid': addPharmacyForm.controls.latitude.touched && addPharmacyForm.controls.latitude.invalid}"
+                  formControlName="latitude" class="form-control my-2">
+              </div>
+            </div>
+            <div class="col-6">
+              <div class="form-group mb-3">
+                <label for="longitude">longitude :</label>
+                <input type="number" name="longitude" id="longitude"
+                  [ngClass]="{'is-invalid': addPharmacyForm.controls.longitude.touched && addPharmacyForm.controls.longitude.invalid}"
+                  formControlName="longitude" class="form-control my-2">
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-12">
+              <div class="form-group mb-3">
+                <label for="logo">pharmacy Logo :</label>
+                <input type="file" id="logo" (change)="onFileSelected($event)" class="form-control"
+                  [ngClass]="{'is-invalid': addPharmacyForm.controls.logo.touched && addPharmacyForm.controls.logo.invalid}">
+                <div *ngIf="pharmacyLogo()" class="logo-container mt-2">
+                  <img src="http://localhost:8000{{ pharmacyLogo() }}" alt="Hotel logo Cover" width="100" height="100"
+                    [ngClass]="{'logo-warning': showLogoWarning()}">
+                  <span class="text-danger px-2 fs-6">** Choice Same Logo Or Replaced It</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn close" data-bs-dismiss="modal" id="closeModalButton">Close</button>
+        <button type="button" class="btn save" (click)="savePharmacy()">
+          <span *ngIf="isLoading()" class="spinner-border spinner-border-sm me-2" role="status"
+            aria-hidden="true"></span>
+          {{ modalButton() }}</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Of Viewing The pharmacies Details -->
+<div class="modal fade" id="viewpharmacyDetailsModal" tabindex="-1" aria-labelledby="viewpharmacyDetailsModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">pharmacy Details</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      @if (isFetching()) {
+      <div class="row justify-content-center">
+        <div class="col-12 text-center">
+          @if (isLoading()) {
+          <app-loader />
+          }
+        </div>
+      </div>
+      } @else {
+      <div class="modal-body item-details">
+        <div *ngIf="pharmacy()?.logo">
+          <p><strong>pharmacies logo :</strong></p>
+          <img src="http://localhost:8000{{ pharmacy()?.logo }}" loading="lazy"
+            class="img-fluid rounded w-100 item-image" alt="pharmacy logo">
+          <hr>
+        </div>
+        <p><strong>Title :</strong> {{ pharmacy()?.title }}</p>
+        <hr>
+        <p><strong>Location :</strong> {{ pharmacy()?.location_name }}</p>
+        <hr>
+        <p><strong>Address :</strong> {{ pharmacy()?.address }}</p>
+        <hr>
+        <p><strong>Phone Number :</strong> {{ pharmacy()?.phone_number }}</p>
+        <hr>
+        <p><strong>Latitude : </strong> {{ pharmacy()?.latitude}}</p>
+        <hr />
+        <p><strong>Longitude : </strong> {{ pharmacy()?.longitude}}</p>
+        <hr />
+        <p><strong>pharmacy Added At : </strong> {{ pharmacy()?.created_at | date:'short'}}</p>
+        <hr />
+        <p><strong>pharmacy Updated At : </strong> {{ pharmacy()?.updated_at | date:'short'}}</p>
+      </div>
+      }
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>

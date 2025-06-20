@@ -1,0 +1,166 @@
+<section id="section">
+
+  <div class="container col-md-8">
+    <div class="d-flex justify-content-between my-2">
+      <h2>List Sponsors</h2>
+      <button class="btn" id="add" data-bs-toggle="modal" data-bs-target="#sponsorModal" (click)="openAddModal()">Add
+        Sponsor</button>
+    </div>
+    @if (isFetching()) {
+    <div class="row justify-content-center">
+      <div class="col-12 text-center">
+        @if (isLoading()) {
+        <app-loader />
+        }
+      </div>
+    </div>
+    } @else {
+    <table class="table-hover table-success table-striped table">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Title</th>
+          <th colspan="3">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (item of sponsors(); track $index) {
+        <tr>
+          <td>{{ $index + 1 }}</td>
+          <td>{{ item.title }}</td>
+          <td><a title="Show" (click)="openViewModal(item.id)" data-bs-toggle="modal"
+              data-bs-target="#viewSponsorDetailsModal"><i class="bi bi-eye text-info"></i></a></td>
+          <td><a title="Edit" (click)="openUpdateModal(item)" data-bs-toggle="modal" data-bs-target="#sponsorModal"><i
+                class="bi bi-pen text-warning"></i></a></td>
+          <td><a (click)="deleteSponsor(item.id)" title="Delete"><i class="bi bi-trash text-danger"></i></a></td>
+        </tr>
+        }@empty {
+        <tr>
+          <td colspan="4">
+            <app-empty />
+          </td>
+        </tr>
+        }
+      </tbody>
+    </table>
+    }
+  </div>
+</section>
+
+
+@if (msg()) {
+<div class="toast">
+  <p>{{ msg() }}</p>
+</div> }
+
+<!-- Modal Of Add & Update Sponsors -->
+<div class="modal fade" id="sponsorModal" tabindex="-1" aria-labelledby="sponsorModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5>{{ modalTitle() }}</h5>
+      </div>
+      <div class="modal-body">
+        <form [formGroup]="addSponsorForm">
+          <div class="row">
+            <div class="col-12">
+              <div class="form-group">
+                <label for="title">Title Of Sponsors:</label>
+                <input name="title" id="title" type="text"
+                  [ngClass]="{'is-invalid': addSponsorForm.controls.title.touched && addSponsorForm.controls.title.invalid}"
+                  formControlName="title" class="form-control my-2">
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-12">
+              <div class="form-group">
+                <label for="website_url">Website Link :</label>
+                <input name="website_url" id="website_url" type="url"
+                  [ngClass]="{'is-invalid': addSponsorForm.controls.website_url.touched && addSponsorForm.controls.website_url.invalid}"
+                  formControlName="website_url" class="form-control my-2">
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-12">
+              <div class="form-group mb-3">
+                <label for="description">Description :</label>
+                <textarea name="description" id="description"
+                  [ngClass]="{'is-invalid': addSponsorForm.controls.description.touched && addSponsorForm.controls.description.invalid}"
+                  formControlName="description" class="form-control my-2"></textarea>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-12">
+              <div class="form-group mb-3">
+                <label for="logo">Sponsor Logo :</label>
+                <input type="file" id="logo" (change)="onFileSelected($event)" class="form-control"
+                  [ngClass]="{'is-invalid': addSponsorForm.controls.logo.touched && addSponsorForm.controls.logo.invalid}">
+                <div *ngIf="sponsorLogo()" class="logo-container mt-2">
+                  <img src="http://localhost:8000{{ sponsorLogo() }}" alt="Hotel logo Cover" width="100" height="100"
+                    [ngClass]="{'logo-warning': showLogoWarning()}">
+                  <span class="text-danger px-2 fs-6">** Choice Same Logo Or Replaced It</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn close" data-bs-dismiss="modal" id="closeModalButton">Close</button>
+        <button type="button" class="btn save" [disabled]="addSponsorForm.invalid" (click)="saveSponsor()">
+          <span *ngIf="isLoading()" class="spinner-border spinner-border-sm me-2" role="status"
+            aria-hidden="true"></span>
+          {{ modalButton() }}</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Of Viewing The Sponsors Details -->
+<div class="modal fade" id="viewSponsorDetailsModal" tabindex="-1" aria-labelledby="viewSponsorDetailsModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Sponsor Details</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      @if (isFetching()) {
+      <div class="row justify-content-center">
+        <div class="col-12 text-center">
+          @if (isLoading()) {
+          <app-loader />
+          }
+        </div>
+      </div>
+      } @else {
+      <div class="modal-body item-details">
+        <div *ngIf="sponsor()?.logo">
+          <p><strong>Sponsors logo :</strong></p>
+          <img src="http://localhost:8000{{ sponsor()?.logo }}" loading="lazy"
+            class="img-fluid rounded w-100 item-image" alt="sponsor logo">
+          <hr>
+        </div>
+        <p><strong>Title :</strong> {{ sponsor()?.title }}</p>
+        <hr>
+        <p class="content"><strong>Description :</strong> {{ sponsor()?.description }}</p>
+        <hr>
+        <p><strong>Sponser Website Link : </strong> <a style="text-decoration: underline;"
+            href="{{ sponsor()?.website_url}}"> Sponsor Websit </a> </p>
+        <hr />
+        <p><strong>Sponsor Added At : </strong> {{ sponsor()?.created_at | date:'short'}}</p>
+        <hr />
+        <p><strong>Sponsor Updated At : </strong> {{ sponsor()?.updated_at | date:'short'}}</p>
+        <hr />
+
+      </div>
+      }
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>

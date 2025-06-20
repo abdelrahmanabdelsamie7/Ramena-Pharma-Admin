@@ -1,0 +1,181 @@
+<section id="section">
+  <div class="container col-md-8">
+    <div class="d-flex justify-content-between my-2">
+      <h2>List Products</h2>
+      <button class="btn" id="add" data-bs-toggle="modal" data-bs-target="#productModal" (click)="openAddModal()">Add
+        Product</button>
+    </div>
+    @if (isFetching()) {
+    <div class="row justify-content-center">
+      <div class="col-12 text-center">
+        @if (isLoading()) {
+        <app-loader></app-loader>
+        }
+      </div>
+    </div>
+    } @else {
+    <table class="table-hover table-success table-striped table">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Title</th>
+          <th colspan="4">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (item of products(); track $index) {
+        <tr>
+          <td>{{ $index + 1 }}</td>
+          <td>{{ item.title }}</td>
+          <td><a title="Show" (click)="openViewModal(item.id)" data-bs-toggle="modal"
+              data-bs-target="#viewProductDetailsModal"><i class="bi bi-eye text-info"></i></a></td>
+          <td><a title="Edit" (click)="openUpdateModal(item)" data-bs-toggle="modal" data-bs-target="#productModal"><i
+                class="bi bi-pen text-warning"></i></a></td>
+          <td><a (click)="deleteProduct(item.id)" title="Delete"><i class="bi bi-trash text-danger"></i></a></td>
+          <td><a routerLink="/product-faqs/{{ item.id }}" title="Add Faqs"><i
+                class="bi bi-node-plus text-success"></i></a>
+          </td>
+        </tr>
+        }@empty {
+        <tr>
+          <td colspan="4">
+            <app-empty />
+          </td>
+        </tr>
+        }
+      </tbody>
+    </table>
+    }
+  </div>
+</section>
+
+
+@if (msg()) {
+<div class="toast">
+  <p>{{ msg() }}</p>
+</div> }
+
+<!-- Modal Of Add & Update Product -->
+<div class="modal fade" id="productModal" tabindex="-1" aria-labelledby="productModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5>{{ modalTitle() }}</h5>
+      </div>
+      <div class="modal-body">
+        <form [formGroup]="addProductForm">
+          <div class="row">
+            <div class="col-6">
+              <div class="form-group">
+                <label for="title">Title Of Product:</label>
+                <input name="title" id="title" type="text"
+                  [ngClass]="{'is-invalid': addProductForm.controls.title.touched && addProductForm.controls.title.invalid}"
+                  formControlName="title" class="form-control my-2">
+              </div>
+            </div>
+            <div class="col-6">
+              <div class="form-group">
+                <label for="price">Price Of Product :</label>
+                <input name="price" id="price" type="number"
+                  [ngClass]="{'is-invalid': addProductForm.controls.price.touched && addProductForm.controls.price.invalid}"
+                  formControlName="price" class="form-control my-2">
+              </div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-6">
+              <div class="form-group">
+                <label for="video_ar">Video Ar Link :</label>
+                <input name="video_ar" id="video_ar" type="url"
+                  [ngClass]="{'is-invalid': addProductForm.controls.video_ar.touched && addProductForm.controls.video_ar.invalid}"
+                  formControlName="video_ar" class="form-control my-2">
+              </div>
+            </div>
+            <div class="col-6">
+              <div class="form-group">
+                <label for="location">Video En Link :</label>
+                <input name="video_en" id="video_en" type="url"
+                  [ngClass]="{'is-invalid': addProductForm.controls.video_en.touched && addProductForm.controls.video_en.invalid}"
+                  formControlName="video_en" class="form-control my-2">
+              </div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-12">
+              <div class="form-group mb-3">
+                <label for="description">Description :</label>
+                <textarea name="description" id="description"
+                  [ngClass]="{'is-invalid': addProductForm.controls.description.touched && addProductForm.controls.description.invalid}"
+                  formControlName="description" class="form-control my-2"></textarea>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-12">
+              <div class="form-group mb-3">
+                <label for="image">Image Cover :</label>
+                <input type="file" id="image" (change)="onFileSelected($event)" class="form-control"
+                  [ngClass]="{'is-invalid': addProductForm.controls.image.touched && addProductForm.controls.image.invalid}">
+                <div *ngIf="ProductImage()" class="image-container mt-2">
+                  <img src="http://localhost:8000{{ ProductImage() }}" alt="Hotel Image Cover" width="100" height="100"
+                    [ngClass]="{'image-warning': showImageWarning()}">
+                  <span class="text-danger px-2 fs-6">** Choice Same Image Or Replaced It</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn close" data-bs-dismiss="modal" id="closeModalButton">Close</button>
+        <button type="button" class="btn save" [disabled]="addProductForm.invalid" (click)="saveProduct()">
+          <span *ngIf="isLoading()" class="spinner-border spinner-border-sm me-2" role="status"
+            aria-hidden="true"></span>
+          {{ modalButton() }}
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Of Viewing The Product Details -->
+<div class="modal fade" id="viewProductDetailsModal" tabindex="-1" aria-labelledby="viewProductDetailsModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Product Details</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+
+      <div class="modal-body">
+        <div *ngIf="product()?.image">
+          <p><strong>Product Image :</strong></p>
+          <img src="http://localhost:8000{{ product()?.image }}" loading="lazy"
+            class="img-fluid rounded w-100 item-image" alt="Product Image">
+          <hr>
+        </div>
+        <p><strong>Title :</strong> {{ product()?.title }}</p>
+        <hr>
+        <p class="content"><strong>Description :</strong> {{ product()?.description }}</p>
+        <hr>
+        <p><strong>Price Of Product :</strong> {{ product()?.price | currency:'EGP' }}</p>
+        <hr>
+        <p><strong>Video Ar Link:</strong> <a href="{{ product()?.video_ar}}"> Watch the Video </a> </p>
+        <hr />
+        <p><strong>Video En Link:</strong> <a href="{{ product()?.video_en}}"> Watch the video </a></p>
+        <hr />
+        <p><strong>Product Added At : </strong> {{ product()?.created_at | date:'short'}}</p>
+        <hr />
+        <p><strong>Product Updated At : </strong> {{ product()?.updated_at | date:'short'}}</p>
+        <hr />
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
