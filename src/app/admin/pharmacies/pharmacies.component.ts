@@ -2,7 +2,6 @@ import { AfterViewInit, Component, DestroyRef, OnInit, signal } from '@angular/c
 import { Pharmacy } from '../../core/interfaces/pharmacy';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { CustomValidators } from 'ng2-validation';
 import { PharmacyService } from '../../core/services/pharmacy.service';
 import { LoaderComponent } from "../shared/loader/loader.component";
 import { EmptyComponent } from "../shared/empty/empty.component";
@@ -14,7 +13,7 @@ import * as L from 'leaflet';
   templateUrl: './pharmacies.component.html',
   styleUrl: './pharmacies.component.css'
 })
-export class PharmaciesComponent implements OnInit , AfterViewInit {
+export class PharmaciesComponent implements OnInit {
   isFetching = signal<boolean>(false);
   isLoading = signal<boolean>(false);
   pharmacies = signal<Pharmacy[]>([])
@@ -82,38 +81,38 @@ export class PharmaciesComponent implements OnInit , AfterViewInit {
   ngOnInit(): void {
     this.getPharmacies();
   }
-  map!: L.Map;
+  // map!: L.Map;
 
-  ngAfterViewInit(): void {
-    this.initMap();
-    this.addMarkers();
-  }
+  // ngAfterViewInit(): void {
+  //   this.initMap();
+  //   this.addMarkers();
+  // }
 
-  initMap(): void {
-    this.map = L.map('map').setView([26.6475, 31.6457], 15);
+  // initMap(): void {
+  //   this.map = L.map('map').setView([26.6475, 31.6457], 15);
 
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      attribution: 'Map data © Ramena Pharma'
-    }).addTo(this.map);
-  }
+  //   L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+  //     attribution: 'Map data © Ramena Pharma'
+  //   }).addTo(this.map);
+  // }
 
-  addMarkers(): void {
+  // addMarkers(): void {
 
-    if (!this.pharmacies()) {
-      console.warn('No pharmacies available to add markers.');
-      return;
-    }
-    this.pharmacies().forEach((pharmacy: Pharmacy) => {
-      console.log(`Adding marker for pharmacy: ${pharmacy.title} at [${pharmacy.latitude}, ${pharmacy.longitude}]`);
+  //   if (!this.pharmacies()) {
+  //     console.warn('No pharmacies available to add markers.');
+  //     return;
+  //   }
+  //   this.pharmacies().forEach((pharmacy: Pharmacy) => {
+  //     console.log(`Adding marker for pharmacy: ${pharmacy.title} at [${pharmacy.latitude}, ${pharmacy.longitude}]`);
 
-      const marker = L.marker([+pharmacy.latitude, +pharmacy.longitude]).addTo(this.map);
-      marker.bindPopup(`
-        <b>${pharmacy.title}</b><br>
-        العنوان: ${pharmacy.address}<br>
-        <a href="tel:${pharmacy.phone_number}">اتصل الآن</a>
-      `);
-    });
-  }
+  //     const marker = L.marker([+pharmacy.latitude, +pharmacy.longitude]).addTo(this.map);
+  //     marker.bindPopup(`
+  //       <b>${pharmacy.title}</b><br>
+  //       العنوان: ${pharmacy.address}<br>
+  //       <a href="tel:${pharmacy.phone_number}">اتصل الآن</a>
+  //     `);
+  //   });
+  // }
   // Get All pharmacies Method
   getPharmacies() {
     this.isFetching.set(true);
@@ -122,14 +121,7 @@ export class PharmaciesComponent implements OnInit , AfterViewInit {
         this.isFetching.set(false)
         this.pharmacies.set(resp.data)
         this.pharmacies().forEach((pharmacy: Pharmacy) => {
-          console.log(`Adding marker for pharmacy: ${pharmacy.title} at [${pharmacy.latitude}, ${pharmacy.longitude}]`);
-
-          const marker = L.marker([+pharmacy.latitude, +pharmacy.longitude]).addTo(this.map);
-          marker.bindPopup(`
-            <b>${pharmacy.title}</b><br>
-            العنوان: ${pharmacy.address}<br>
-            <a href="tel:${pharmacy.phone_number}">اتصل الآن</a>
-          `);
+          console.log(`Adding marker for pharmacy: ${pharmacy.title} at [${pharmacy.latitude}, ${pharmacy.longitude}]`)
         });
       },
       error: (err) => {

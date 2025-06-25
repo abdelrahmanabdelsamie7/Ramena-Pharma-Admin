@@ -10,13 +10,13 @@
         <li><a routerLinkActive="active" routerLink="products" (click)="closeMobileNav()">Products</a></li>
         <li><a routerLinkActive="active" routerLink="sponsors" (click)="closeMobileNav()">Sponsors</a></li>
         <li><a routerLinkActive="active" routerLink="pharmacies" (click)="closeMobileNav()">Pharmacies</a></li>
-        <li><a routerLinkActive="active" routerLink="#contact" (click)="closeMobileNav()">Inbox</a></li>
+        <li><a routerLinkActive="active" routerLink="inbox" (click)="closeMobileNav()">Inbox</a></li>
       </ul>
       <i class="mobile-nav-toggle d-xl-none" [class.bi-list]="!isMobileNavOpen()" [class.bi-x]="isMobileNavOpen()"
         (click)="toggleMobileNav()"></i>
     </nav>
     @if (isAuth()) {
-    <a class="btn-getstarted" routerLink="#about">Logout</a>
+    <a class="btn-getstarted" (click)="logout()">Logout</a>
     }
   </div>
 </header>

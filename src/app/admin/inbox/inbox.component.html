@@ -1,0 +1,104 @@
+<section id="section">
+  <!-- <div class="container">
+    <div id="map" style="height: 500px;"></div>
+  </div> -->
+
+  <div class="container col-md-8">
+    <div class="d-flex justify-content-between my-2">
+      <h2>List Of Contacts </h2>
+    </div>
+
+    <table class="table-hover table-success table-striped table">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Title</th>
+          <th colspan="2">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (item of contactUs(); track $index) {
+        <tr>
+          <td>{{ $index + 1 }}</td>
+          <td>{{ item.name }}</td>
+          <td><a title="Show" (click)="openViewModal(item.id)" data-bs-toggle="modal"
+              data-bs-target="#viewContactDetailsModal"><i class="bi bi-eye text-info"></i></a></td>
+          <td><a (click)="deleteContact(item.id)" title="Delete"><i class="bi bi-trash text-danger"></i></a></td>
+        </tr>
+        }@empty {
+        <tr>
+          <td colspan="4">
+            <app-empty />
+          </td>
+        </tr>
+        }
+      </tbody>
+    </table>
+
+  </div>
+</section>
+
+
+@if (msg()) {
+<div class="toast">
+  <p>{{ msg() }}</p>
+</div> }
+
+<div class="modal fade" id="viewContactDetailsModal" tabindex="-1" aria-labelledby="viewContactDetailsModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Contact Details</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      @if (isFetching()) {
+      <div class="row justify-content-center">
+        <div class="col-12 text-center">
+          @if (isLoading()) {
+          <app-loader />
+          }
+        </div>
+      </div>
+      } @else {
+      <div class="modal-body item-details">
+        <p><strong>Name :</strong> {{ contactDetials().name }}</p>
+        <hr>
+        <p><strong>E-mail :</strong> {{ contactDetials().email }}</p>
+        <hr>
+        <p><strong>Phone Number :</strong> {{ contactDetials().phone }}</p>
+        <hr>
+        <p><strong>Message : </strong> {{ contactDetials().message}}</p>
+        <hr />
+        @if (contactDetials().status == 'pending') {
+        <p><strong>No Reply : </strong> <i style="color: #fea419; font-size:18px" class="bi bi-stopwatch"></i>
+        </p>
+        <div class="row">
+          <div class="col-md-8">
+            <input type="text" class="form-control" required minlength="5" placeholder="Reply to this message"
+              [(ngModel)]="contactDetials().admin_reply" name="adminReply" #adminReply="ngModel" />
+            <small *ngIf="adminReply.invalid && adminReply.touched" class="text-danger">
+              Minimum 5 characters required.
+            </small>
+          </div>
+
+          <div class="col-md-4">
+            <button class="btn" id="add" [disabled]="adminReply.invalid" (click)="sendReply(contactDetials().id)">
+              Send Reply
+            </button>
+          </div>
+        </div>
+
+        }@else {
+        <p><strong>Reply : </strong> {{ contactDetials().admin_reply}}</p>
+        }
+        <hr />
+        <p><strong>Send At : </strong> {{ contactDetials().created_at | date:'short'}}</p>
+      </div>
+      }
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>

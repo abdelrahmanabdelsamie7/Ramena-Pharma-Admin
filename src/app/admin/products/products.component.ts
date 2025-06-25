@@ -140,6 +140,7 @@ export class ProductsComponent implements OnInit {
           if (err.error.message === 'The image field is required.') {
             this.msg.set('Add Image Again');
           } else {
+            this.isLoading.set(false);
             this.msg.set('Check Validation Of Data !');
           }
           setTimeout(() => this.msg.set(''), 3000);
@@ -158,6 +159,7 @@ export class ProductsComponent implements OnInit {
           this.closeModal();
         },
         error: (err) => {
+          this.isLoading.set(false);
           if (err.error.message === 'The image field is required.') {
             this.msg.set('Add Image Again');
           } else {

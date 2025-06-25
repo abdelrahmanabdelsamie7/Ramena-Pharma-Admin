@@ -1,0 +1,7 @@
+.btn-login {
+  color: var(--card-background);
+  background: var(--primary-color);
+  font-size: 14px;
+  transition: 0.3s;
+  border-radius: 15px;
+}

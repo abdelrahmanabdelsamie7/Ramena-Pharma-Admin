@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, HostListener, signal } from '@angular/core';
-import { RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-navbar',
@@ -10,6 +10,7 @@ import { RouterModule } from '@angular/router';
   styleUrl: './navbar.component.css'
 })
 export class NavbarComponent {
+  constructor(private _Router:Router){}
   isMobileNavOpen = signal(false);
   isAuth = signal(true);
   toggleMobileNav(): void {
@@ -36,5 +37,10 @@ export class NavbarComponent {
         event.stopImmediatePropagation();
       }
     }
+  }
+  logout(): void {
+    localStorage.removeItem('adminTokenRamena');
+    this.isAuth.set(false);
+    this._Router.navigateByUrl('/admin-login');
   }
 }
