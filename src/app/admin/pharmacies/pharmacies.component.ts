@@ -6,6 +6,7 @@ import { PharmacyService } from '../../core/services/pharmacy.service';
 import { LoaderComponent } from "../shared/loader/loader.component";
 import { EmptyComponent } from "../shared/empty/empty.component";
 import * as L from 'leaflet';
+import { environment } from '../../../environments/environment.development';
 @Component({
   selector: 'app-pharmacies',
   standalone: true,
@@ -14,6 +15,7 @@ import * as L from 'leaflet';
   styleUrl: './pharmacies.component.css'
 })
 export class PharmaciesComponent implements OnInit {
+  baseUrl = signal<string>('https://api-ramen-pharma.ramen-pharma.com/public')
   isFetching = signal<boolean>(false);
   isLoading = signal<boolean>(false);
   pharmacies = signal<Pharmacy[]>([])

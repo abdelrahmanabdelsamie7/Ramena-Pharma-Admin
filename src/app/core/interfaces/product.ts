@@ -11,6 +11,6 @@ export interface Product {
   video_en: string;
   created_at?: Date;
   updated_at?: Date;
-  product_faqs?: ProductFaq[];
-  reviews?: ProductRating[];
+  faqs?: ProductFaq[];
+  ratings?: ProductRating[];
 }

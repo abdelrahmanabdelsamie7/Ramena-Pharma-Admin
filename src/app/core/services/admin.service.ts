@@ -18,11 +18,11 @@ export class AdminService {
   getAccount(): Observable<Admin> {
     return this._HttpClient.get<Admin>(`${environment.baseUrl}/admin/getaccount`);
   }
-  addAdmin(admin: Admin): Observable<Admin> {
+  addAdmin(admin: FormData): Observable<Admin> {
     return this._HttpClient.post<Admin>(`${environment.baseUrl}/admin/add-admin`, admin);
   }
-  deleteAdmin(): Observable<void> {
-    return this._HttpClient.delete<void>(`${environment.baseUrl}/admin/delete-admin`);
+  deleteAdmin(id:string): Observable<void> {
+    return this._HttpClient.delete<void>(`${environment.baseUrl}/admin/delete-admin/${id}`);
   }
   getAdmins(): Observable<Admin[]> {
     return this._HttpClient.get<Admin[]>(`${environment.baseUrl}/admin/all-admins`);

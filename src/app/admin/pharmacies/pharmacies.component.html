@@ -167,7 +167,7 @@
       <div class="modal-body item-details">
         <div *ngIf="pharmacy()?.logo">
           <p><strong>pharmacies logo :</strong></p>
-          <img src="http://localhost:8000{{ pharmacy()?.logo }}" loading="lazy"
+          <img src="{{ baseUrl() }}{{ pharmacy()?.logo }}" loading="lazy"
             class="img-fluid rounded w-100 item-image" alt="pharmacy logo">
           <hr>
         </div>

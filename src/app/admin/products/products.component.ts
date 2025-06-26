@@ -103,6 +103,8 @@ export class ProductsComponent implements OnInit {
       next: (resp: any) => {
         this.isFetching.set(false)
         this.product.set(resp.data);
+        console.log(this.product());
+
       }
     });
   }

@@ -1,0 +1,123 @@
+<section id="section">
+  <!-- Admin Welcome Card -->
+  <div class="container col-md-6 mx-auto text-start my-4">
+    <div class="card shadow-lg border-0 p-4 d-flex align-items-center">
+      <div class="rounded-circle text-white d-flex justify-content-center align-items-center person"
+        style="width: 60px; height: 60px; font-size: 28px;">
+        <i class="bi bi-person-circle"></i>
+      </div>
+      <div class="ms-3">
+        <h5 class="mb-1 text-center py-2">Welcome, Mr. {{ admin().name }}</h5>
+        <p class="text-muted text-center">Admin Settings Panel</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main Content Section -->
+  <div class="container my-5">
+    <div class="row g-4">
+      <!-- Add Admin Card -->
+      <div class="col-md-4">
+        <div class="card p-4 shadow-lg border-0 text-center">
+          <button class="btn btn-success w-100" id="add" data-bs-toggle="modal" data-bs-target="#adminModal"
+            (click)="openAddModal()">
+            <i class="bi bi-plus-circle me-1"></i> Add Admin
+          </button>
+        </div>
+      </div>
+
+      <!-- Admin List Table -->
+      <div class="col-md-8">
+        <div class="card shadow-lg border-0">
+          <table class="table table-hover table-striped mb-0">
+            <thead class=" text-center">
+              <tr>
+                <th>#</th>
+                <th><i class="bi bi-person"></i> Name</th>
+                <th><i class="bi bi-envelope"></i> Email</th>
+                <th><i class="bi bi-gear"></i> Actions</th>
+              </tr>
+            </thead>
+            <tbody class="text-center">
+              @for (item of allAdmins(); track $index) {
+              <tr>
+                <td>{{ $index + 1 }}</td>
+                <td>{{ item?.name }}</td>
+                <td>{{ item?.email }}</td>
+                <td>
+                  <a (click)="deleteAdmin(item.id)" title="Delete" class="text-danger">
+                    <i class="bi bi-trash"></i>
+                  </a>
+                </td>
+              </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Toast Message -->
+@if (msg()) {
+<div class="toast position-fixed top-0 end-0 m-4 show" role="alert" style="z-index: 9999;">
+  <div class="toast-header bg-success text-white">
+    <strong class="me-auto">Success</strong>
+    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="toast"></button>
+  </div>
+  <div class="toast-body">
+    {{ msg() }}
+  </div>
+</div>
+}
+
+<!-- Modal for Add/Update Admin -->
+<div class="modal fade" id="adminModal" tabindex="-1" aria-labelledby="adminModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">{{ modalTitle() }}</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+
+      <div class="modal-body">
+        <form [formGroup]="addAdminForm">
+          <div class="row g-3">
+            <!-- Name -->
+            <div class="col-12">
+              <label for="name" class="form-label">Name :</label>
+              <input id="name" type="text" formControlName="name" class="form-control"
+                [ngClass]="{'is-invalid': addAdminForm.controls.name.touched && addAdminForm.controls.name.invalid}">
+            </div>
+
+            <!-- Email -->
+            <div class="col-12">
+              <label for="email" class="form-label">Email :</label>
+              <input id="email" type="email" formControlName="email" class="form-control"
+                [ngClass]="{'is-invalid': addAdminForm.controls.email.touched && addAdminForm.controls.email.invalid}">
+            </div>
+
+            <!-- Password -->
+            <div class="col-12">
+              <label for="password" class="form-label">Password :</label>
+              <input id="password" type="password" formControlName="password" class="form-control"
+                [ngClass]="{'is-invalid': addAdminForm.controls.password.touched && addAdminForm.controls.password.invalid}">
+            </div>
+          </div>
+        </form>
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="closeModalButton">
+          Close
+        </button>
+        <button type="button" class="btn btn-primary" (click)="addAdmin(addAdminForm)">
+          <span *ngIf="isLoading()" class="spinner-border spinner-border-sm me-2" role="status"
+            aria-hidden="true"></span>
+          {{ modalButton() }}
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

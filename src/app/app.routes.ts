@@ -1,3 +1,4 @@
+import { SattingComponent } from './admin/satting/satting.component';
 import { Routes } from '@angular/router';
 import { ProductsComponent } from './admin/products/products.component';
 import { SponsorsComponent } from './admin/sponsors/sponsors.component';
@@ -5,8 +6,8 @@ import { ProductFaqsComponent } from './admin/products/product-faqs/product-faqs
 import { PharmaciesComponent } from './admin/pharmacies/pharmacies.component';
 import { DashboardComponent } from './admin/dashboard/dashboard.component';
 import { adminGuard } from './core/guards/admin.guard';
-import { StatisticsComponent } from './admin/statistics/statistics.component';
 import { InboxComponent } from './admin/inbox/inbox.component';
+import { RatingsComponent } from './admin/ratings/ratings.component';
 
 export const routes: Routes = [
 
@@ -25,7 +26,7 @@ export const routes: Routes = [
       },
       {
         path: 'dashboard',
-        component: StatisticsComponent,
+        component: SattingComponent,
         title: 'Dashboard',
       },
       { path: 'products', component: ProductsComponent, title: 'Products' },
@@ -33,6 +34,7 @@ export const routes: Routes = [
       { path: 'sponsors', component: SponsorsComponent, title: 'Sponsors' },
       { path: 'pharmacies', component: PharmaciesComponent, title: 'Pharmacies' },
       { path: 'inbox', component: InboxComponent, title: 'Inbox Contact' },
+      { path: 'product-rating', component: RatingsComponent, title: 'Ratings' },
 
     ]
   },
